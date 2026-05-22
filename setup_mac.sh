@@ -158,24 +158,23 @@ fi
 # ══════════════════════════════════════════════════════════════════════════════
 section "Apps (Casks)"
 
-CASKS=(
-  brave-browser
-  rectangle
-  stats
-  protonvpn
-  proton-drive
-  vlc
-  visual-studio-code
-)
-
-for cask in "${CASKS[@]}"; do
+install_cask() {
+  local cask="$1"
   if ! brew list --cask "$cask" &>/dev/null; then
     info "Installing $cask…"
     brew install --cask "$cask" && log "$cask installed."
   else
     log "$cask already installed. Skipping."
   fi
-done
+}
+
+install_cask brave-browser
+install_cask rectangle
+install_cask stats
+install_cask protonvpn
+install_cask proton-drive
+install_cask vlc
+install_cask visual-studio-code
 
 # ── DisplayLink Manager (manual — not on Homebrew due to Gatekeeper signing) ──
 section "DisplayLink Manager"
