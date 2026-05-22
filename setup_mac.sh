@@ -204,8 +204,11 @@ fi
 if command -v defaultbrowser &>/dev/null; then
   info "Setting Brave as default browser…"
   # The bundle ID key for Brave in defaultbrowser is 'brave'
-  defaultbrowser brave 2>/dev/null && log "Brave set as default browser." || \
+  if defaultbrowser brave 2>/dev/null; then
+    log "Brave set as default browser."
+  else
     warn "Could not set Brave automatically. Do it manually: Brave → Settings → Make default browser."
+  fi
 else
   warn "defaultbrowser tool not found — set Brave manually via its Settings page."
 fi
@@ -351,21 +354,25 @@ check_sec() {
 }
 
 # FileVault
-FV=$(fdesetup status 2>/dev/null)
+FV=$(fdesetup status 2>/dev/null || echo "unknown")
 check_sec "FileVault (disk encryption)" "$FV" "On"
-[[ "$FV" != *"On"* ]] && warn "  → Enable: System Settings → Privacy & Security → FileVault"
+if [[ "$FV" != *"On"* ]]; then
+  warn "  → Enable: System Settings → Privacy & Security → FileVault"
+fi
 
 # Firewall
 FW=$(defaults read /Library/Preferences/com.apple.alf globalstate 2>/dev/null || echo "0")
 check_sec "Firewall" "$FW" "1"
-[[ "$FW" == "0" ]] && warn "  → Enable: System Settings → Network → Firewall"
+if [[ "$FW" == "0" ]]; then
+  warn "  → Enable: System Settings → Network → Firewall"
+fi
 
 # Gatekeeper
-GK=$(spctl --status 2>/dev/null)
+GK=$(spctl --status 2>/dev/null || echo "unknown")
 check_sec "Gatekeeper (app signing)" "$GK" "assessments enabled"
 
 # SIP (System Integrity Protection)
-SIP=$(csrutil status 2>/dev/null)
+SIP=$(csrutil status 2>/dev/null || echo "unknown")
 check_sec "System Integrity Protection (SIP)" "$SIP" "enabled"
 
 # Automatic updates
