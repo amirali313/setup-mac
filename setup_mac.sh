@@ -121,37 +121,25 @@ sed -i '' 's/^plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highligh
 log "Plugins configured."
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  5 — zsh313 Theme
+#  5 — Powerlevel10k Theme
 # ══════════════════════════════════════════════════════════════════════════════
-section "zsh313 Theme"
-THEME_DIR="$ZSH_CUSTOM/themes"
-THEME_FILE="$THEME_DIR/zsh313.zsh-theme"
+section "Powerlevel10k Theme"
+THEME_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes"
+P10K_DIR="$THEME_DIR/powerlevel10k"
 
 mkdir -p "$THEME_DIR"
 
-if [[ ! -f "$THEME_FILE" ]]; then
-  info "Downloading zsh313 theme from GitHub…"
-  TMP_DIR=$(mktemp -d)
-  git clone https://github.com/amirali313/zsh313-theme "$TMP_DIR/zsh313"
-  
-  # Try to find the .zsh-theme file
-  FOUND=$(find "$TMP_DIR/zsh313" -name "*.zsh-theme" | head -1)
-  if [[ -n "$FOUND" ]]; then
-    cp "$FOUND" "$THEME_FILE"
-    log "zsh313 theme installed at $THEME_FILE"
-  else
-    warn "Could not find .zsh-theme file in repo. Check https://github.com/amirali313/zsh313-theme manually."
-  fi
-  rm -rf "$TMP_DIR"
+if [[ ! -d "$P10K_DIR" ]]; then
+  info "Cloning Powerlevel10k…"
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
+  log "Powerlevel10k installed."
 else
-  log "zsh313 theme already present. Skipping."
+  log "Powerlevel10k already present. Skipping."
 fi
 
 # Set the theme in .zshrc
-if [[ -f "$THEME_FILE" ]]; then
-  sed -i '' 's/^ZSH_THEME=.*/ZSH_THEME="zsh313"/' "$HOME/.zshrc" 2>/dev/null || true
-  log "ZSH_THEME set to zsh313 in ~/.zshrc"
-fi
+sed -i '' 's/^ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' "$HOME/.zshrc" 2>/dev/null || true
+log "ZSH_THEME set to powerlevel10k in ~/.zshrc"
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  6 — APPS
