@@ -288,45 +288,43 @@ fi
 section "macOS Personalizations"
 
 info "Dock: auto-hide, remove magnification delay, faster animation…"
-defaults write com.apple.dock autohide -bool true
-defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.dock autohide-time-modifier -float 0.4
-defaults write com.apple.dock magnification -bool false
-defaults write com.apple.dock show-recents -bool false          # Hide recent apps in Dock
-defaults write com.apple.dock tilesize -int 48
+defaults write com.apple.dock autohide -bool true || true
+defaults write com.apple.dock autohide-delay -float 0 || true
+defaults write com.apple.dock autohide-time-modifier -float 0.4 || true
+defaults write com.apple.dock magnification -bool false || true
+defaults write com.apple.dock show-recents -bool false          # Hide recent apps in Dock || true
+defaults write com.apple.dock tilesize -int 48 || true
 
 info "Finder: show path bar, status bar, extensions, hidden files…"
-defaults write com.apple.finder ShowPathbar -bool true
-defaults write com.apple.finder ShowStatusBar -bool true
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-defaults write com.apple.finder AppleShowAllFiles -bool false   # set to true if you prefer
+defaults write com.apple.finder ShowPathbar -bool true || true
+defaults write com.apple.finder ShowStatusBar -bool true || true
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true || true
+defaults write com.apple.finder AppleShowAllFiles -bool false   # set to true if you prefer || true
 
 info "Keyboard: fast key repeat, shorter delay…"
-defaults write NSGlobalDomain KeyRepeat -int 2
-defaults write NSGlobalDomain InitialKeyRepeat -int 15
-defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false  # Allow key repeat
+defaults write NSGlobalDomain KeyRepeat -int 2 || true
+defaults write NSGlobalDomain InitialKeyRepeat -int 15 || true
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false  # Allow key repeat || true
 
 info "Trackpad: tap to click, three-finger drag…"
-defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true
+defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true || true
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true || true
+defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true || true
 
 info "Menu bar & UI tweaks…"
-defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"   # Dark mode
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"   # Dark mode || true
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false || true
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false || true
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false || true
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false || true
 
 info "Mission Control: faster animation…"
-defaults write com.apple.dock expose-animation-duration -float 0.1
+defaults write com.apple.dock expose-animation-duration -float 0.1 || true
 
-info "Safari (even if you use Brave)…"
-defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
 
 info "Disable .DS_Store on network & USB drives…"
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true || true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true || true
 
 # Restart affected services
 for app in Dock Finder SystemUIServer; do
