@@ -215,32 +215,29 @@ fi
 # ══════════════════════════════════════════════════════════════════════════════
 section "CLI Tools"
 
-BREWS=(
-  git
-  curl
-  wget
-  fzf          # Fuzzy finder — incredible in terminal
-  bat          # cat with syntax highlighting
-  eza          # Modern ls replacement
-  ripgrep      # Blazing fast grep (rg)
-  fd           # Better find
-  tldr         # Simplified man pages
-  jq           # JSON processor
-  tree         # Directory tree viewer
-  htop         # Interactive process viewer
-  neofetch     # System info (great for flex)
-)
-
-for tool in "${BREWS[@]}"; do
-  NAME="${tool%%#*}"
-  NAME=$(echo "$NAME" | xargs)
-  if ! brew list "$NAME" &>/dev/null; then
-    info "Installing $NAME…"
-    brew install "$NAME" && log "$NAME installed."
+install_brew() {
+  local pkg="$1"
+  if ! brew list "$pkg" &>/dev/null; then
+    info "Installing $pkg…"
+    brew install "$pkg" && log "$pkg installed."
   else
-    log "$NAME already installed. Skipping."
+    log "$pkg already installed. Skipping."
   fi
-done
+}
+
+install_brew git
+install_brew curl
+install_brew wget
+install_brew fzf
+install_brew bat
+install_brew eza
+install_brew ripgrep
+install_brew fd
+install_brew tldr
+install_brew jq
+install_brew tree
+install_brew htop
+install_brew neofetch
 
 # fzf key bindings
 if command -v fzf &>/dev/null; then
