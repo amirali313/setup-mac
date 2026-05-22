@@ -346,10 +346,10 @@ check_sec() {
   local label="$1" result="$2" expected="$3"
   if [[ "$result" == *"$expected"* ]]; then
     log "$label"
-    ((SECURITY_PASS++))
+    SECURITY_PASS=$((SECURITY_PASS + 1))
   else
     warn "$label — ${RED}ACTION NEEDED${RESET}"
-    ((SECURITY_WARN++))
+    SECURITY_WARN=$((SECURITY_WARN + 1))
   fi
 }
 
