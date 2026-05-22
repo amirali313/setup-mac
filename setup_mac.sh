@@ -237,7 +237,7 @@ install_brew tldr
 install_brew jq
 install_brew tree
 install_brew htop
-install_brew neofetch
+install_brew fastfetch
 
 # fzf key bindings
 if command -v fzf &>/dev/null; then
