@@ -419,13 +419,9 @@ for cask in wireshark lulu blockblock knockknock; do
   fi
 done
 
-# Run lynis quick audit
+# Lynis installed — run manually when ready
 if command -v lynis &>/dev/null; then
-  info "Running Lynis quick system audit (summary only)…"
-  echo ""
-  sudo lynis audit system --quick 2>&1 | grep -E "Warning|Suggestion|Hardening" | head -20 || true
-  echo ""
-  log "Full Lynis report: sudo lynis audit system"
+  log "Lynis ready — run a full audit anytime with: sudo lynis audit system"
 fi
 
 # ══════════════════════════════════════════════════════════════════════════════
