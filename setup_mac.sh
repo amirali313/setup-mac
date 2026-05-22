@@ -20,13 +20,13 @@ fail()    { echo -e "${RED}[✘]${RESET} $1"; exit 1; }
 #  0 — GREETING
 # ══════════════════════════════════════════════════════════════════════════════
 clear
-echo -e "${BOLD}"
-echo "  ███╗   ███╗ █████╗  ██████╗ ██████╗  ██████╗"
-echo "  ████╗ ████║██╔══██╗██╔════╝██╔═══██╗██╔════╝"
-echo "  ██╔████╔██║███████║██║     ██║   ██║╚█████╗ "
-echo "  ██║╚██╔╝██║██╔══██║██║     ██║   ██║ ╚═══██╗"
-echo "  ██║ ╚═╝ ██║██║  ██║╚██████╗╚██████╔╝██████╔╝"
-echo "  ╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═════╝ "
+echo -e "${BOLD}${CYAN}"
+echo "  ███╗   ███╗  █████╗   ██████╗  ██████╗  ███████╗     ██████╗   ██╗ ██████╗ "
+echo "  ████╗ ████║ ██╔══██╗ ██╔════╝ ██╔═══██╗ ██╔════╝     ╚════██╗ ███║ ╚════██╗"
+echo "  ██╔████╔██║ ███████║ ██║      ██║   ██║ ███████╗      █████╔╝ ╚██║  █████╔╝"
+echo "  ██║╚██╔╝██║ ██╔══██║ ██║      ██║   ██║ ╚════██║      ╚═══██╗  ██║  ╚═══██╗"
+echo "  ██║ ╚═╝ ██║ ██║  ██║ ╚██████╗ ╚██████╔╝ ███████║     ██████╔╝  ██║ ██████╔╝"
+echo "  ╚═╝     ╚═╝ ╚═╝  ╚═╝  ╚═════╝  ╚═════╝  ╚══════╝     ╚═════╝   ╚═╝ ╚═════╝ "
 echo -e "${RESET}"
 echo -e "${CYAN}  Personal macOS Setup Script${RESET}"
 echo -e "  Started at: $(date '+%Y-%m-%d %H:%M:%S')\n"
@@ -159,23 +159,21 @@ fi
 section "Apps (Casks)"
 
 CASKS=(
-  brave-browser   # Privacy-first browser
-  rectangle       # Window management
-  stats           # Menu bar system monitor
-  protonvpn       # VPN
-  proton-drive    # Proton encrypted cloud storage (requires macOS 13+)
-  vlc             # Media player
-  visual-studio-code  # Code editor
+  brave-browser
+  rectangle
+  stats
+  protonvpn
+  proton-drive
+  vlc
+  visual-studio-code
 )
 
 for cask in "${CASKS[@]}"; do
-  NAME="${cask%%#*}"   # strip inline comment
-  NAME=$(echo "$NAME" | xargs)  # trim spaces
-  if ! brew list --cask "$NAME" &>/dev/null; then
-    info "Installing $NAME…"
-    brew install --cask "$NAME" && log "$NAME installed."
+  if ! brew list --cask "$cask" &>/dev/null; then
+    info "Installing $cask…"
+    brew install --cask "$cask" && log "$cask installed."
   else
-    log "$NAME already installed. Skipping."
+    log "$cask already installed. Skipping."
   fi
 done
 
