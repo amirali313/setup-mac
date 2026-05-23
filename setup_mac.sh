@@ -500,9 +500,8 @@ fi
 section "Dock Cleanup"
 info "Removing all dock icons, keeping Brave, iTerm2, System Settings…"
 
-# Wipe all current dock apps cleanly
+# Wipe only the left side (apps), leave right side (Downloads/Trash) untouched
 defaults delete com.apple.dock persistent-apps 2>/dev/null || true
-defaults delete com.apple.dock persistent-others 2>/dev/null || true
 
 add_dock_item() {
   local app_path="$1"
