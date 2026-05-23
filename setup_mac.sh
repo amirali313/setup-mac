@@ -498,7 +498,7 @@ fi
 #  13 — DOCK CLEANUP
 # ══════════════════════════════════════════════════════════════════════════════
 section "Dock Cleanup"
-info "Removing all dock icons, keeping Finder, Brave, iTerm2, System Settings…"
+info "Removing all dock icons, keeping Brave, iTerm2, System Settings…"
 
 defaults write com.apple.dock persistent-apps -array || true
 
@@ -506,13 +506,12 @@ add_dock_item() {
   defaults write com.apple.dock persistent-apps -array-add     "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>$1</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>" || true
 }
 
-add_dock_item "/Applications/Finder.app"
 add_dock_item "/Applications/Brave Browser.app"
 add_dock_item "/Applications/iTerm.app"
 add_dock_item "/System/Applications/System Settings.app"
 
-# Add Downloads folder to the right side of the dock
-defaults write com.apple.dock persistent-others -array   "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>$HOME/Downloads</string><key>_CFURLStringType</key><integer>0</integer></dict><key>showas</key><integer>2</integer><key>arrangement</key><integer>2</integer></dict></dict>" || true
+# Add Downloads folder to the right side as a stack
+defaults write com.apple.dock persistent-others -array   "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>$HOME/Downloads</string><key>_CFURLStringType</key><integer>0</integer></dict><key>showas</key><integer>1</integer><key>displayas</key><integer>1</integer><key>arrangement</key><integer>2</integer></dict></dict>" || true
 
 killall Dock &>/dev/null || true
 log "Dock configured."
