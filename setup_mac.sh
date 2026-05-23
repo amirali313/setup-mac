@@ -498,34 +498,23 @@ fi
 #  13 — DOCK CLEANUP
 # ══════════════════════════════════════════════════════════════════════════════
 section "Dock Cleanup"
-info "Removing all dock icons, keeping Brave, iTerm2, System Settings…"
+info "Installing dockutil to safely manage dock…"
+brew install dockutil 2>/dev/null || true
 
-# Backup right side (Downloads/Trash) before clearing dock
-DOCK_OTHERS=$(defaults read com.apple.dock persistent-others 2>/dev/null || echo "")
+if command -v dockutil &>/dev/null; then
+  info "Removing all dock app icons…"
+  dockutil --remove all --no-restart 2>/dev/null || true
 
-# Wipe left side only
-defaults delete com.apple.dock persistent-apps 2>/dev/null || true
+  info "Adding Brave, iTerm2, System Settings…"
+  [[ -d "/Applications/Brave Browser.app" ]] &&     dockutil --add "/Applications/Brave Browser.app" --no-restart 2>/dev/null || true
+  [[ -d "/Applications/iTerm.app" ]] &&     dockutil --add "/Applications/iTerm.app" --no-restart 2>/dev/null || true
+  [[ -d "/System/Applications/System Settings.app" ]] &&     dockutil --add "/System/Applications/System Settings.app" --no-restart 2>/dev/null || true
 
-add_dock_item() {
-  local app_path="$1"
-  if [[ -d "$app_path" ]]; then
-    defaults write com.apple.dock persistent-apps -array-add       "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>${app_path}</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>" || true
-  else
-    warn "Skipping dock item — not found: $app_path"
-  fi
-}
-
-add_dock_item "/Applications/Brave Browser.app"
-add_dock_item "/Applications/iTerm.app"
-add_dock_item "/System/Applications/System Settings.app"
-
-# Restore right side
-if [[ -n "$DOCK_OTHERS" ]]; then
-  defaults write com.apple.dock persistent-others "$DOCK_OTHERS" || true
+  killall Dock &>/dev/null || true
+  log "Dock configured."
+else
+  warn "dockutil not found — skipping dock setup."
 fi
-
-killall Dock &>/dev/null || true
-log "Dock configured."
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  14 — WRAP UP
