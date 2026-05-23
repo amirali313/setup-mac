@@ -505,8 +505,12 @@ info "Installing dockutil to safely manage dock…"
 brew install dockutil 2>/dev/null || true
 
 if command -v dockutil &>/dev/null; then
-  info "Removing all dock app icons…"
-  dockutil --remove all --section apps --no-restart 2>/dev/null || true
+  info "Removing all dock app icons one by one…"
+
+  # Remove every default macOS app individually — safer than --remove all
+  for app in "App Store" "Contacts" "Calendar" "Reminders" "Notes" "Maps"              "Photos" "FaceTime" "Messages" "Mail" "Music" "Podcasts"              "TV" "News" "Keynote" "Numbers" "Pages" "Safari"              "Launchpad" "Mission Control" "Siri" "System Preferences"              "System Settings" "iPhone Mirroring" "Freeform" "Clock"; do
+    dockutil --remove "$app" --no-restart 2>/dev/null || true
+  done
 
   info "Adding Brave, iTerm2, System Settings…"
   [[ -d "/Applications/Brave Browser.app" ]] &&     dockutil --add "/Applications/Brave Browser.app" --no-restart 2>/dev/null || true
@@ -520,7 +524,71 @@ else
 fi
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  14 — WRAP UP
+#  14 — GIT SETUP
+# ══════════════════════════════════════════════════════════════════════════════
+section "Git Setup"
+
+# Get user info
+echo ""
+read -rp "  Enter your GitHub username: " GITHUB_USER
+read -rp "  Enter your GitHub email: " GIT_EMAIL
+
+# Configure git globals
+git config --global user.name "$GITHUB_USER"
+git config --global user.email "$GIT_EMAIL"
+git config --global core.editor "vim"
+git config --global init.defaultBranch main
+git config --global pull.rebase false
+git config --global core.autocrlf input
+git config --global push.autoSetupRemote true
+log "Git global config set."
+
+# Generate SSH key for GitHub
+SSH_KEY="$HOME/.ssh/id_ed25519"
+if [[ ! -f "$SSH_KEY" ]]; then
+  info "Generating SSH key…"
+  ssh-keygen -t ed25519 -C "$GIT_EMAIL" -f "$SSH_KEY" -N ""
+  eval "$(ssh-agent -s)" 2>/dev/null
+  ssh-add --apple-use-keychain "$SSH_KEY" 2>/dev/null || ssh-add "$SSH_KEY"
+
+  # Add to SSH config
+  mkdir -p "$HOME/.ssh"
+  cat >> "$HOME/.ssh/config" << EOF
+
+Host github.com
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+EOF
+  log "SSH key generated."
+else
+  log "SSH key already exists. Skipping."
+fi
+
+# Copy public key to clipboard
+if [[ -f "${SSH_KEY}.pub" ]]; then
+  pbcopy < "${SSH_KEY}.pub"
+  echo ""
+  echo -e "  ${CYAN}━━━ Add your SSH key to GitHub ━━━${RESET}"
+  echo "  Your public key has been copied to clipboard."
+  echo "  1. Go to: https://github.com/settings/keys"
+  echo "  2. Click 'New SSH key'"
+  echo "  3. Paste and save"
+  echo ""
+  open "https://github.com/settings/keys"
+  read -rp "  Press ENTER once you have added the key to GitHub… "
+
+  # Test connection
+  info "Testing GitHub SSH connection…"
+  if ssh -T git@github.com 2>&1 | grep -q "successfully authenticated"; then
+    log "GitHub SSH connection successful. You are ready to push and pull!"
+  else
+    warn "Could not verify GitHub connection — make sure you saved the key on GitHub."
+  fi
+fi
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  15 — WRAP UP
 # ══════════════════════════════════════════════════════════════════════════════
 section "Done! 🎉"
 
