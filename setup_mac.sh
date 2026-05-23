@@ -303,7 +303,10 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool
 defaults write com.apple.AppleMultitouchTrackpad TrackpadThreeFingerDrag -bool true || true
 
 info "Menu bar & UI tweaks…"
-defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"   # Dark mode || true
+defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark" || true
+defaults write NSGlobalDomain AppleAccentColor -int -1 || true          # Graphite accent
+defaults write com.apple.controlcenter NSStatusItem-Visible-WiFi -bool true || true
+osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to true' || true
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false || true
 defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false || true
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false || true
@@ -503,7 +506,7 @@ brew install dockutil 2>/dev/null || true
 
 if command -v dockutil &>/dev/null; then
   info "Removing all dock app icons…"
-  dockutil --remove all --no-restart 2>/dev/null || true
+  dockutil --remove all --section apps --no-restart 2>/dev/null || true
 
   info "Adding Brave, iTerm2, System Settings…"
   [[ -d "/Applications/Brave Browser.app" ]] &&     dockutil --add "/Applications/Brave Browser.app" --no-restart 2>/dev/null || true
