@@ -500,7 +500,10 @@ fi
 section "Dock Cleanup"
 info "Removing all dock icons, keeping Brave, iTerm2, System Settings…"
 
-# Wipe only the left side (apps), leave right side (Downloads/Trash) untouched
+# Backup right side (Downloads/Trash) before clearing dock
+DOCK_OTHERS=$(defaults read com.apple.dock persistent-others 2>/dev/null || echo "")
+
+# Wipe left side only
 defaults delete com.apple.dock persistent-apps 2>/dev/null || true
 
 add_dock_item() {
@@ -515,6 +518,11 @@ add_dock_item() {
 add_dock_item "/Applications/Brave Browser.app"
 add_dock_item "/Applications/iTerm.app"
 add_dock_item "/System/Applications/System Settings.app"
+
+# Restore right side
+if [[ -n "$DOCK_OTHERS" ]]; then
+  defaults write com.apple.dock persistent-others "$DOCK_OTHERS" || true
+fi
 
 killall Dock &>/dev/null || true
 log "Dock configured."
