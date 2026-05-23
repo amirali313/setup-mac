@@ -500,18 +500,22 @@ fi
 section "Dock Cleanup"
 info "Removing all dock icons, keeping Brave, iTerm2, System Settings…"
 
-defaults write com.apple.dock persistent-apps -array || true
+# Wipe all current dock apps cleanly
+defaults delete com.apple.dock persistent-apps 2>/dev/null || true
+defaults delete com.apple.dock persistent-others 2>/dev/null || true
 
 add_dock_item() {
-  defaults write com.apple.dock persistent-apps -array-add     "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>$1</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>" || true
+  local app_path="$1"
+  if [[ -d "$app_path" ]]; then
+    defaults write com.apple.dock persistent-apps -array-add       "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>${app_path}</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>" || true
+  else
+    warn "Skipping dock item — not found: $app_path"
+  fi
 }
 
 add_dock_item "/Applications/Brave Browser.app"
 add_dock_item "/Applications/iTerm.app"
 add_dock_item "/System/Applications/System Settings.app"
-
-# Add Downloads folder to the right side as a stack
-defaults write com.apple.dock persistent-others -array   "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>$HOME/Downloads</string><key>_CFURLStringType</key><integer>0</integer></dict><key>showas</key><integer>1</integer><key>displayas</key><integer>1</integer><key>arrangement</key><integer>2</integer></dict></dict>" || true
 
 killall Dock &>/dev/null || true
 log "Dock configured."
