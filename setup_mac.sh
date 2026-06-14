@@ -16,6 +16,27 @@ warn()    { echo -e "${YELLOW}[!]${RESET} $1"; }
 section() { echo -e "\n${BOLD}${CYAN}━━━ $1 ━━━${RESET}\n"; }
 fail()    { echo -e "${RED}[✘]${RESET} $1"; exit 1; }
 
+# ask(question, description) — returns 0=yes 1=no
+ask() {
+  local question="$1"
+  local description="$2"
+  echo ""
+  echo -e "  ${BOLD}${CYAN}◆ $question${RESET}"
+  [[ -n "$description" ]] && echo -e "  ${YELLOW}  $description${RESET}"
+  echo ""
+  echo -e "  ${GREEN}(y)${RESET} Yes    ${RED}(n)${RESET} No    ${CYAN}(q)${RESET} Quit"
+  echo ""
+  while true; do
+    read -rp "  → " choice
+    case "$choice" in
+      y|Y) echo ""; return 0 ;;
+      n|N) echo ""; return 1 ;;
+      q|Q) echo "Exiting."; exit 0 ;;
+      *)   echo -e "  Please enter y, n, or q" ;;
+    esac
+  done
+}
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  0 — GREETING
 # ══════════════════════════════════════════════════════════════════════════════
@@ -77,6 +98,7 @@ fi
 # ══════════════════════════════════════════════════════════════════════════════
 #  3 — iTerm2
 # ══════════════════════════════════════════════════════════════════════════════
+if ask "Install iTerm2?" "Better terminal emulator for macOS"; then
 section "iTerm2"
 if ! brew list --cask iterm2 &>/dev/null; then
   info "Installing iTerm2…"
@@ -86,9 +108,12 @@ else
   log "iTerm2 already installed. Skipping."
 fi
 
+fi
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  4 — Oh My Zsh
 # ══════════════════════════════════════════════════════════════════════════════
+if ask "Install Oh My Zsh + Powerlevel10k + plugins?" "zsh framework, theme, autosuggestions and syntax highlighting"; then
 section "Oh My Zsh"
 if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
   info "Installing Oh My Zsh…"
@@ -141,9 +166,12 @@ fi
 sed -i '' 's/^ZSH_THEME=.*/ZSH_THEME="powerlevel10k\/powerlevel10k"/' "$HOME/.zshrc" 2>/dev/null || true
 log "ZSH_THEME set to powerlevel10k in ~/.zshrc"
 
+fi
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  6 — APPS
 # ══════════════════════════════════════════════════════════════════════════════
+if ask "Install apps?" "Brave, Rectangle, Stats, ProtonVPN, Proton Drive, VLC, VS Code, DisplayLink"; then
 section "Apps (Casks)"
 
 install_cask() {
@@ -201,9 +229,12 @@ else
   warn "defaultbrowser tool not found — set Brave manually via its Settings page."
 fi
 
+fi
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  7 — DEVELOPER / CLI TOOLS  (edit freely)
 # ══════════════════════════════════════════════════════════════════════════════
+if ask "Install CLI tools?" "git, bat, eza, fzf, ripgrep, fd, tldr, jq, tree, htop, fastfetch and more"; then
 section "CLI Tools"
 
 install_brew() {
@@ -260,9 +291,12 @@ if ! grep -q "Custom Aliases (added by setup_mac.sh)" "$HOME/.zshrc"; then
   log "Aliases added to ~/.zshrc"
 fi
 
+fi
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  8 — FONTS  (Nerd Font for icons in terminal)
 # ══════════════════════════════════════════════════════════════════════════════
+if ask "Install JetBrainsMono Nerd Font?" "Required for icons and glyphs in the terminal"; then
 section "Nerd Font (JetBrainsMono)"
 if ! fc-list 2>/dev/null | grep -q "JetBrainsMono" && \
    ! ls ~/Library/Fonts/ 2>/dev/null | grep -q "JetBrains"; then
@@ -273,9 +307,12 @@ else
   log "JetBrainsMono Nerd Font already present. Skipping."
 fi
 
+fi
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  9 — macOS PERSONALIZATIONS
 # ══════════════════════════════════════════════════════════════════════════════
+if ask "Apply macOS personalizations?" "Dock, Finder, keyboard, trackpad, dark mode and more"; then
 section "macOS Personalizations"
 
 info "Dock: auto-hide, remove magnification delay, faster animation…"
@@ -326,9 +363,12 @@ killall Finder &>/dev/null || true
 killall SystemUIServer &>/dev/null || true
 log "macOS personalization applied."
 
+fi
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  10 — SECURITY CHECKS
 # ══════════════════════════════════════════════════════════════════════════════
+if ask "Run security checks?" "FileVault, Firewall, Gatekeeper, SIP, auto-updates"; then
 section "Security Checks"
 
 SECURITY_PASS=0; SECURITY_WARN=0
@@ -373,9 +413,12 @@ check_sec "Automatic update checks" "$AU" "1"
 echo ""
 echo -e "  Security: ${GREEN}${SECURITY_PASS} passed${RESET}  |  ${YELLOW}${SECURITY_WARN} warnings${RESET}"
 
+fi
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  11 — OPEN-SOURCE SECURITY TOOLS
 # ══════════════════════════════════════════════════════════════════════════════
+if ask "Install open-source security tools?" "LuLu, BlockBlock, KnockKnock, Lynis, nmap, Wireshark"; then
 section "Open-Source Security Tools"
 
 SEC_TOOLS=(
@@ -415,9 +458,12 @@ if command -v lynis &>/dev/null; then
   log "Lynis ready — run a full audit anytime with: sudo lynis audit system"
 fi
 
+fi
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  12 — VIM SETUP (vim-plug + Gruvbox theme)
 # ══════════════════════════════════════════════════════════════════════════════
+if ask "Set up Vim?" "vim-plug, Gruvbox theme, NERDTree, airline and more"; then
 section "Vim — vim-plug + Gruvbox theme"
 
 # Install vim-plug (plugin manager)
@@ -497,9 +543,12 @@ if command -v vim &>/dev/null && [[ -f "$VIMPLUG" ]]; then
   log "Vim plugins installed."
 fi
 
+fi
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  13 — DOCK CLEANUP
 # ══════════════════════════════════════════════════════════════════════════════
+if ask "Clean up Dock?" "Keep only Brave, iTerm2 and System Settings on the left side"; then
 section "Dock Cleanup"
 info "Installing dockutil to safely manage dock…"
 brew install dockutil 2>/dev/null || true
@@ -523,9 +572,12 @@ else
   warn "dockutil not found — skipping dock setup."
 fi
 
+fi
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  14 — GIT SETUP
 # ══════════════════════════════════════════════════════════════════════════════
+if ask "Set up Git and GitHub SSH?" "Configure git globals and generate SSH key for GitHub"; then
 section "Git Setup"
 
 # Get user info
@@ -585,6 +637,8 @@ if [[ -f "${SSH_KEY}.pub" ]]; then
   else
     warn "Could not verify GitHub connection — make sure you saved the key on GitHub."
   fi
+fi
+
 fi
 
 # ══════════════════════════════════════════════════════════════════════════════
