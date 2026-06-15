@@ -1,12 +1,6 @@
-# macOS Setup
+# macOS 313
 
 Automated macOS setup script — Homebrew, iTerm2, Oh My Zsh, security hardening, and curated apps, all in one run.
-
----
-
-## What it does
-
-Run once on a fresh Mac and get a fully configured machine — terminal, apps, system tweaks, and security checks without clicking through a single preferences pane.
 
 ---
 
@@ -18,17 +12,31 @@ chmod +x setup_mac.sh && ./setup_mac.sh
 
 > Requires macOS 12 Monterey or later. Tested on Apple Silicon and Intel.
 
+The script is **interactive** — it asks you category by category whether you want to install each section, so you stay in full control of what gets set up.
+
+```
+  ◆ Install CLI tools?
+    git, bat, eza, fzf, ripgrep, fd, tldr, jq, tree, htop, fastfetch and more
+
+  (y) Yes    (n) No    (q) Quit
+
+  →
+```
+
 ---
 
 ## What gets installed
 
-### Terminal
+### Core (always runs)
 - [Homebrew](https://brew.sh) — package manager
+- Xcode Command Line Tools
+
+### Terminal
 - [iTerm2](https://iterm2.com) — terminal emulator
 - [Oh My Zsh](https://ohmyz.sh) — zsh framework
-- [zsh313](https://github.com/amirali313/zsh313-theme) — zsh theme
+- [Powerlevel10k](https://github.com/romkatv/powerlevel10k) — zsh theme with interactive config wizard
 - `zsh-autosuggestions` + `zsh-syntax-highlighting` — plugins
-- JetBrainsMono Nerd Font — icons & glyphs in terminal
+- JetBrainsMono Nerd Font — icons and glyphs in terminal
 
 ### Apps
 | App | Purpose |
@@ -43,7 +51,20 @@ chmod +x setup_mac.sh && ./setup_mac.sh
 | [DisplayLink Manager](https://www.synaptics.com/products/displaylink-graphics/downloads/macos) | Multi-monitor driver *(manual install — opened automatically)* |
 
 ### CLI Tools
-`git` `curl` `wget` `fzf` `bat` `eza` `ripgrep` `fd` `tldr` `jq` `tree` `htop` `neofetch`
+| Tool | Purpose |
+|---|---|
+| `git` | Version control |
+| `curl` / `wget` | File transfer |
+| `fzf` | Fuzzy finder — `Ctrl+R` for interactive history search |
+| `bat` | `cat` with syntax highlighting |
+| `eza` | Modern `ls` with icons |
+| `ripgrep` | Blazing fast `grep` |
+| `fd` | Better `find` |
+| `tldr` | Simplified man pages |
+| `jq` | JSON processor |
+| `tree` | Directory tree viewer |
+| `htop` | Interactive process viewer |
+| `fastfetch` | System info in terminal |
 
 ### Vim
 - [vim-plug](https://github.com/junegunn/vim-plug) — plugin manager
@@ -57,13 +78,13 @@ chmod +x setup_mac.sh && ./setup_mac.sh
 
 ## macOS Tweaks
 
-- Dock auto-hide with no delay
-- Dark mode
-- Tap-to-click + three-finger drag
+- Dock auto-hide with zero delay, dark mode applied
+- Tap-to-click and three-finger drag enabled
 - Fast key repeat
 - Finder path bar, status bar, and file extensions visible
 - Autocorrect and autocapitalization disabled
 - `.DS_Store` disabled on USB and network drives
+- Dock cleaned up — only Brave, iTerm2, System Settings on the left
 
 ---
 
@@ -85,7 +106,7 @@ The script audits the following and warns if action is needed:
 | [BlockBlock](https://objective-see.org/products/blockblock.html) | Alerts on persistence installs |
 | [KnockKnock](https://objective-see.org/products/knockknock.html) | Scans everything that runs at startup |
 | [Lynis](https://cisofy.com/lynis/) | Full system hardening audit |
-| [nmap](https://nmap.org) | Network/port scanner |
+| [nmap](https://nmap.org) | Network and port scanner |
 | [Wireshark](https://www.wireshark.org) | Packet analyzer |
 
 Run a full Lynis audit anytime with:
@@ -95,17 +116,31 @@ sudo lynis audit system
 
 ---
 
+## Git & GitHub
+
+The script fully sets up Git and GitHub SSH so you can push and pull immediately:
+
+1. Asks for your GitHub username and email
+2. Sets git globals (`user.name`, `user.email`, default branch `main`, vim editor)
+3. Generates an SSH key (`ed25519`)
+4. Adds it to your SSH agent and macOS keychain
+5. Copies the public key to clipboard and opens `github.com/settings/keys`
+6. Waits for you to add it, then tests the connection automatically
+
+---
+
 ## After running
 
 A few things that still require manual steps:
 
 1. **iTerm2** → Preferences → Profiles → Text → set font to `JetBrainsMono Nerd Font`
-2. **FileVault** → System Settings → Privacy & Security → FileVault (if flagged)
-3. **Firewall** → System Settings → Network → Firewall (if flagged)
-4. **LuLu** → open and configure outbound firewall rules
-5. **BlockBlock** → open and enable persistence monitoring
-6. **DisplayLink** → System Settings → Privacy & Security → allow the system extension
-7. Restart terminal or run `exec zsh` to load the new theme and plugins
+2. **Powerlevel10k** → runs its config wizard automatically on first terminal open
+3. **FileVault** → System Settings → Privacy & Security (if flagged)
+4. **Firewall** → System Settings → Network → Firewall (if flagged)
+5. **LuLu** → open and configure outbound firewall rules
+6. **BlockBlock** → open and enable persistence monitoring
+7. **DisplayLink** → System Settings → Privacy & Security → allow the system extension
+8. Restart terminal or run `exec zsh` to load the new theme and plugins
 
 ---
 
@@ -119,5 +154,8 @@ A few things that still require manual steps:
 | `grep` | `rg` (ripgrep) |
 | `find` | `fd` |
 | `ip` | public IP via `curl ifconfig.me` |
+| `myip` | local IP via `ipconfig getifaddr en0` |
 | `hidden` | toggle hidden files in Finder |
 | `reload` | `source ~/.zshrc` |
+| `trash` | empty the Trash |
+| `update` | brew update + upgrade + cleanup |
