@@ -122,10 +122,11 @@ The script fully sets up Git and GitHub SSH so you can push and pull immediately
 
 1. Asks for your GitHub username and email
 2. Sets git globals (`user.name`, `user.email`, default branch `main`, vim editor)
-3. Generates an SSH key (`ed25519`)
-4. Adds it to your SSH agent and macOS keychain
-5. Copies the public key to clipboard and opens `github.com/settings/keys`
-6. Waits for you to add it, then tests the connection automatically
+3. Asks for an SSH key passphrase (hidden input, confirmed twice) for extra security
+4. Generates an SSH key (`ed25519`) with your passphrase
+5. Adds it to your SSH agent and macOS keychain — so you only type the passphrase once per reboot
+6. Copies the public key to clipboard and opens `github.com/settings/keys`
+7. Waits for you to add it, then tests the connection automatically
 
 ---
 
