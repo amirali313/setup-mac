@@ -599,7 +599,19 @@ log "Git global config set."
 SSH_KEY="$HOME/.ssh/id_ed25519"
 if [[ ! -f "$SSH_KEY" ]]; then
   info "Generating SSH key…"
-  ssh-keygen -t ed25519 -C "$GIT_EMAIL" -f "$SSH_KEY" -N ""
+  echo ""
+  echo -e "  ${YELLOW}Choose a strong passphrase for your SSH key.${RESET}"
+  echo -e "  ${YELLOW}You will need to enter it once after each reboot.${RESET}"
+  echo ""
+  read -rsp "  SSH key passphrase: " SSH_PASSPHRASE
+  echo ""
+  read -rsp "  Confirm passphrase: " SSH_PASSPHRASE_CONFIRM
+  echo ""
+  if [[ "$SSH_PASSPHRASE" != "$SSH_PASSPHRASE_CONFIRM" ]]; then
+    warn "Passphrases do not match — SSH key will be generated without a passphrase."
+    SSH_PASSPHRASE=""
+  fi
+  ssh-keygen -t ed25519 -C "$GIT_EMAIL" -f "$SSH_KEY" -N "$SSH_PASSPHRASE"
   eval "$(ssh-agent -s)" 2>/dev/null
   ssh-add --apple-use-keychain "$SSH_KEY" 2>/dev/null || ssh-add "$SSH_KEY"
 
