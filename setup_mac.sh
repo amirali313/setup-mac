@@ -187,8 +187,6 @@ install_cask() {
 install_cask brave-browser
 install_cask rectangle
 install_cask stats
-install_cask protonvpn
-install_cask proton-drive
 install_cask vlc
 install_cask visual-studio-code
 
@@ -208,6 +206,20 @@ if [[ ! -d "/Applications/DisplayLink Manager.app" ]]; then
   log "DisplayLink — continuing."
 else
   log "DisplayLink Manager already installed. Skipping."
+fi
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  6b — PROTON SUITE
+# ══════════════════════════════════════════════════════════════════════════════
+if ask "Install Proton suite?" "ProtonMail, ProtonVPN, Proton Drive, Proton Pass — privacy-first apps"; then
+section "Proton Suite"
+
+  install_cask proton-mail
+  install_cask protonvpn
+  install_cask proton-drive
+  install_cask proton-pass
+
+  log "Proton suite installed."
 fi
 
 # ── Set Brave as default browser ─────────────────────────────────────────────
