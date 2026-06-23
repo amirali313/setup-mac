@@ -44,11 +44,17 @@ The script is **interactive** — it asks you category by category whether you w
 | [Brave](https://brave.com) | Default browser |
 | [Rectangle](https://rectangleapp.com) | Window management |
 | [Stats](https://github.com/exelban/stats) | Menu bar system monitor |
-| [ProtonVPN](https://protonvpn.com) | VPN |
-| [Proton Drive](https://proton.me/drive) | Encrypted cloud storage |
 | [VS Code](https://code.visualstudio.com) | Code editor |
 | [VLC](https://www.videolan.org) | Media player |
 | [DisplayLink Manager](https://www.synaptics.com/products/displaylink-graphics/downloads/macos) | Multi-monitor driver *(manual install — opened automatically)* |
+
+### Proton Suite *(optional section)*
+| App | Purpose |
+|---|---|
+| [ProtonMail](https://proton.me/mail) | Encrypted email |
+| [ProtonVPN](https://protonvpn.com) | VPN |
+| [Proton Drive](https://proton.me/drive) | Encrypted cloud storage |
+| [Proton Pass](https://proton.me/pass) | Password manager |
 
 ### CLI Tools
 | Tool | Purpose |
