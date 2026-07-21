@@ -90,7 +90,6 @@ The script is **interactive** — it asks you category by category whether you w
 - Finder path bar, status bar, and file extensions visible
 - Autocorrect and autocapitalization disabled
 - `.DS_Store` disabled on USB and network drives
-- Dock cleaned up — only Brave, iTerm2, System Settings on the left
 - Hot corner: bottom-right → Show Desktop
 
 ---

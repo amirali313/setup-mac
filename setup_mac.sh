@@ -565,35 +565,6 @@ fi
 fi
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  13 — DOCK CLEANUP
-# ══════════════════════════════════════════════════════════════════════════════
-if ask "Clean up Dock?" "Keep only Brave, iTerm2 and System Settings on the left side"; then
-section "Dock Cleanup"
-info "Installing dockutil to safely manage dock…"
-brew install dockutil 2>/dev/null || true
-
-if command -v dockutil &>/dev/null; then
-  info "Removing all dock app icons one by one…"
-
-  # Remove every default macOS app individually — safer than --remove all
-  for app in "App Store" "Contacts" "Calendar" "Reminders" "Notes" "Maps"              "Photos" "FaceTime" "Messages" "Mail" "Music" "Podcasts"              "TV" "News" "Keynote" "Numbers" "Pages" "Safari"              "Launchpad" "Mission Control" "Siri" "System Preferences"              "System Settings" "iPhone Mirroring" "Freeform" "Clock"; do
-    dockutil --remove "$app" --no-restart 2>/dev/null || true
-  done
-
-  info "Adding Brave, iTerm2, System Settings…"
-  [[ -d "/Applications/Brave Browser.app" ]] &&     dockutil --add "/Applications/Brave Browser.app" --no-restart 2>/dev/null || true
-  [[ -d "/Applications/iTerm.app" ]] &&     dockutil --add "/Applications/iTerm.app" --no-restart 2>/dev/null || true
-  [[ -d "/System/Applications/System Settings.app" ]] &&     dockutil --add "/System/Applications/System Settings.app" --no-restart 2>/dev/null || true
-
-  killall Dock &>/dev/null || true
-  log "Dock configured."
-else
-  warn "dockutil not found — skipping dock setup."
-fi
-
-fi
-
-# ══════════════════════════════════════════════════════════════════════════════
 #  14 — GIT SETUP
 # ══════════════════════════════════════════════════════════════════════════════
 if ask "Set up Git and GitHub SSH?" "Configure git globals and generate SSH key for GitHub"; then
