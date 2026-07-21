@@ -364,6 +364,13 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false ||
 info "Mission Control: faster animation…"
 defaults write com.apple.dock expose-animation-duration -float 0.1 || true
 
+info "Hot corners: bottom-right → Show Desktop…"
+# Hot corner values: 0=none, 2=Mission Control, 3=App Windows,
+# 4=Desktop, 5=Screen Saver, 10=Sleep, 11=Launchpad, 12=Notification Center
+# wvous-bl = bottom-left, wvous-br = bottom-right, wvous-tl = top-left, wvous-tr = top-right
+defaults write com.apple.dock wvous-br-corner  -int 4 || true   # bottom-right → Desktop
+defaults write com.apple.dock wvous-br-modifier -int 0 || true  # no modifier key needed
+
 
 info "Disable .DS_Store on network & USB drives…"
 defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true || true
