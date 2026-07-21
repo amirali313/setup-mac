@@ -601,8 +601,17 @@ section "Git Setup"
 
 # Get user info
 echo ""
-read -rp "  Enter your GitHub username: " GITHUB_USER
-read -rp "  Enter your GitHub email: " GIT_EMAIL
+while true; do
+  read -rp "  Enter your GitHub username: " GITHUB_USER
+  [[ -n "$GITHUB_USER" ]] && break
+  warn "Username cannot be empty."
+done
+
+while true; do
+  read -rp "  Enter your GitHub email: " GIT_EMAIL
+  [[ -n "$GIT_EMAIL" ]] && break
+  warn "Email cannot be empty."
+done
 
 # Configure git globals
 git config --global user.name "$GITHUB_USER"
