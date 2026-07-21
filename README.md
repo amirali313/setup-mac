@@ -91,6 +91,7 @@ The script is **interactive** — it asks you category by category whether you w
 - Autocorrect and autocapitalization disabled
 - `.DS_Store` disabled on USB and network drives
 - Dock cleaned up — only Brave, iTerm2, System Settings on the left
+- Hot corner: bottom-right → Show Desktop
 
 ---
 
